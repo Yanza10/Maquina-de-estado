@@ -1,0 +1,56 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+--nombre: Oscar Yanza
+--Maquina de estado
+  
+entity maquina is
+    port (        
+        clk : in  std_logic;
+        reset : in std_logic;
+        x : in std_logic;
+        z : out std_logic
+    );
+end maquina;
+ 
+architecture Behavioral of maquina is
+  type estados_t is (q0,q1,q2,q3,q4);
+  signal estado : estados_t; 
+begin
+
+   process (clk,reset) begin
+    if(reset='1') then
+      estado <= q0;
+      z <= '0';
+    elsif rising_edge(clk) then
+      case(estado) is
+        when q0 =>
+          z <= '0';
+          if(x='0') then estado <= q1;
+          else estado <= q2;
+          end if;
+        when q1 =>
+          z <= '0';
+          if(x='0') then estado <= q1;
+          else estado <= q3;
+          end if;
+        when q2 => 
+          z <= '0';
+          if(x='0') then estado <= q4;
+          else estado <= q2; 
+          end if;
+        when q3 =>
+          z <= '1'; 
+          if(x='0') then estado <= q4;
+          else estado <= q2; 
+          end if;
+        when q4 =>
+          z <= '1';
+          if(x='0') then estado <= q1;
+          else estado <= q3;
+          end if;
+        when others => null;
+      end case;
+    end if;
+  end process;
+  end  Behavioral; 
